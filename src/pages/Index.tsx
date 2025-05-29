@@ -77,10 +77,10 @@ const Index = () => {
             // Simulate finding broken links in API docs
             if (linkNumber === 34) {
               setBrokenLinks(prev => [...prev, {
-                url: 'https://api.hubapi.com/contacts/v1/contact/batch/',
+                url: 'https://developers.hubspot.com/docs/methods/contacts/batch_update_contacts',
                 status: 404,
-                error: 'Not Found - Deprecated endpoint',
-                linkType: 'API Endpoint',
+                error: 'Not Found - Documentation page removed',
+                linkType: 'API Documentation',
                 pageTitle: 'Contacts API Reference',
                 appName: 'Contacts API',
                 pageNumber: page
@@ -110,11 +110,11 @@ const Index = () => {
             }
             if (linkNumber === 356) {
               setBrokenLinks(prev => [...prev, {
-                url: 'https://developers.hubspot.com/docs/methods/deals/create_deal',
+                url: 'https://developers.hubspot.com/docs/api/crm/deals/create',
                 status: 500,
                 error: 'Internal Server Error',
                 linkType: 'API Reference',
-                pageTitle: 'Create Deal Endpoint',
+                pageTitle: 'Create Deal Endpoint Documentation',
                 appName: 'Deals API',
                 pageNumber: page
               }]);
