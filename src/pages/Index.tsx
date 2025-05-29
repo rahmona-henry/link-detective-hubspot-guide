@@ -1,10 +1,11 @@
+
 import { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { AlertCircle, CheckCircle, ExternalLink, Search } from "lucide-react";
+import { AlertCircle, CheckCircle, ExternalLink, Search, Link } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface BrokenLink {
@@ -399,6 +400,25 @@ const Index = () => {
             </Button>
           </form>
         </Card>
+
+        {/* Current URL Display */}
+        {(totalLinks > 0 || brokenLinks.length > 0) && (
+          <Card className="max-w-4xl mx-auto p-4 mb-6 bg-blue-50 border-blue-200">
+            <div className="flex items-center gap-2 text-sm">
+              <Link className="w-4 h-4 text-blue-600" />
+              <span className="text-gray-700 font-medium">Scanning:</span>
+              <a 
+                href={url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 underline break-all"
+              >
+                {url}
+              </a>
+              <ExternalLink className="w-3 h-3 text-blue-600" />
+            </div>
+          </Card>
+        )}
 
         {/* Results Summary */}
         {(totalLinks > 0 || brokenLinks.length > 0) && (
