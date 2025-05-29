@@ -12,6 +12,7 @@ interface BrokenLink {
   url: string;
   status: number;
   error: string;
+  linkType: string;
   pageTitle: string;
   appName: string;
   pageNumber: number;
@@ -27,6 +28,8 @@ const Index = () => {
   const [scannedLinks, setScannedLinks] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [totalApps, setTotalApps] = useState(0);
+  const [scannedApps, setScannedApps] = useState(0);
 
   const simulateScanning = async () => {
     setIsScanning(true);
@@ -36,76 +39,126 @@ const Index = () => {
     setScannedLinks(0);
     setCurrentPage(0);
     setTotalPages(0);
+    setTotalApps(0);
+    setScannedApps(0);
 
-    // Simulate discovering total pages
-    const mockTotalPages = 15;
-    setTotalPages(mockTotalPages);
+    // Simulate discovering total pages and apps
+    const mockTotalPages = 76; // Based on ~20 apps per page for 1500+ apps
+    const mockTotalApps = 1523;
+    const linksPerApp = 8; // Setup guide, documentation, support, privacy, terms, website, pricing, demo
+    const mockTotalLinks = mockTotalApps * linksPerApp;
     
-    // Simulate total links across all pages (approx 20 apps per page)
-    const mockTotalLinks = mockTotalPages * 20;
+    setTotalPages(mockTotalPages);
+    setTotalApps(mockTotalApps);
     setTotalLinks(mockTotalLinks);
     
     // Simulate scanning through each page
     for (let page = 1; page <= mockTotalPages; page++) {
       setCurrentPage(page);
       
+      const appsOnPage = page === mockTotalPages ? mockTotalApps % 20 || 20 : 20;
+      
       // Simulate scanning apps on current page
-      for (let appIndex = 1; appIndex <= 20; appIndex++) {
-        const linkIndex = (page - 1) * 20 + appIndex;
-        await new Promise(resolve => setTimeout(resolve, 50));
-        setScannedLinks(linkIndex);
-        setProgress((linkIndex / mockTotalLinks) * 100);
+      for (let appIndex = 1; appIndex <= appsOnPage; appIndex++) {
+        const appNumber = (page - 1) * 20 + appIndex;
+        setScannedApps(appNumber);
         
-        // Simulate finding broken links on different pages
-        if (linkIndex === 12) {
-          setBrokenLinks(prev => [...prev, {
-            url: 'https://example-app1.com/setup-guide',
-            status: 404,
-            error: 'Not Found',
-            pageTitle: 'CRM Integration Pro',
-            appName: 'CRM Integration Pro',
-            pageNumber: page
-          }]);
-        }
-        if (linkIndex === 47) {
-          setBrokenLinks(prev => [...prev, {
-            url: 'https://example-app2.com/getting-started',
-            status: 500,
-            error: 'Internal Server Error',
-            pageTitle: 'Sales Analytics Dashboard',
-            appName: 'Sales Analytics Dashboard',
-            pageNumber: page
-          }]);
-        }
-        if (linkIndex === 89) {
-          setBrokenLinks(prev => [...prev, {
-            url: 'https://example-app3.com/setup',
-            status: 403,
-            error: 'Forbidden',
-            pageTitle: 'Marketing Automation Suite',
-            appName: 'Marketing Automation Suite',
-            pageNumber: page
-          }]);
-        }
-        if (linkIndex === 156) {
-          setBrokenLinks(prev => [...prev, {
-            url: 'https://example-app4.com/docs',
-            status: 404,
-            error: 'Not Found',
-            pageTitle: 'Email Marketing Tool',
-            appName: 'Email Marketing Tool',
-            pageNumber: page
-          }]);
-        }
-        if (linkIndex === 234) {
-          setBrokenLinks(prev => [...prev, {
-            url: 'https://example-app5.com/installation',
-            status: 502,
-            error: 'Bad Gateway',
-            pageTitle: 'Data Sync Platform',
-            appName: 'Data Sync Platform',
-            pageNumber: page
-          }]);
+        // Simulate checking multiple links per app
+        for (let linkIndex = 1; linkIndex <= linksPerApp; linkIndex++) {
+          const linkNumber = (appNumber - 1) * linksPerApp + linkIndex;
+          await new Promise(resolve => setTimeout(resolve, 25));
+          setScannedLinks(linkNumber);
+          setProgress((linkNumber / mockTotalLinks) * 100);
+          
+          // Simulate finding various types of broken links
+          if (linkNumber === 23) {
+            setBrokenLinks(prev => [...prev, {
+              url: 'https://example-app1.com/setup-guide',
+              status: 404,
+              error: 'Not Found',
+              linkType: 'Setup Guide',
+              pageTitle: 'CRM Integration Pro',
+              appName: 'CRM Integration Pro',
+              pageNumber: page
+            }]);
+          }
+          if (linkNumber === 89) {
+            setBrokenLinks(prev => [...prev, {
+              url: 'https://example-app2.com/documentation',
+              status: 500,
+              error: 'Internal Server Error',
+              linkType: 'Documentation',
+              pageTitle: 'Sales Analytics Dashboard',
+              appName: 'Sales Analytics Dashboard',
+              pageNumber: page
+            }]);
+          }
+          if (linkNumber === 156) {
+            setBrokenLinks(prev => [...prev, {
+              url: 'https://example-app3.com/support',
+              status: 403,
+              error: 'Forbidden',
+              linkType: 'Support',
+              pageTitle: 'Marketing Automation Suite',
+              appName: 'Marketing Automation Suite',
+              pageNumber: page
+            }]);
+          }
+          if (linkNumber === 234) {
+            setBrokenLinks(prev => [...prev, {
+              url: 'https://example-app4.com/pricing',
+              status: 404,
+              error: 'Not Found',
+              linkType: 'Pricing',
+              pageTitle: 'Email Marketing Tool',
+              appName: 'Email Marketing Tool',
+              pageNumber: page
+            }]);
+          }
+          if (linkNumber === 445) {
+            setBrokenLinks(prev => [...prev, {
+              url: 'https://example-app5.com/privacy-policy',
+              status: 502,
+              error: 'Bad Gateway',
+              linkType: 'Privacy Policy',
+              pageTitle: 'Data Sync Platform',
+              appName: 'Data Sync Platform',
+              pageNumber: page
+            }]);
+          }
+          if (linkNumber === 667) {
+            setBrokenLinks(prev => [...prev, {
+              url: 'https://example-app6.com/terms',
+              status: 404,
+              error: 'Not Found',
+              linkType: 'Terms of Service',
+              pageTitle: 'Customer Support Widget',
+              appName: 'Customer Support Widget',
+              pageNumber: page
+            }]);
+          }
+          if (linkNumber === 892) {
+            setBrokenLinks(prev => [...prev, {
+              url: 'https://example-app7.com/demo',
+              status: 503,
+              error: 'Service Unavailable',
+              linkType: 'Demo',
+              pageTitle: 'Lead Generation Tool',
+              appName: 'Lead Generation Tool',
+              pageNumber: page
+            }]);
+          }
+          if (linkNumber === 1123) {
+            setBrokenLinks(prev => [...prev, {
+              url: 'https://example-app8.com/website',
+              status: 404,
+              error: 'Not Found',
+              linkType: 'Website',
+              pageTitle: 'Social Media Connector',
+              appName: 'Social Media Connector',
+              pageNumber: page
+            }]);
+          }
         }
       }
     }
@@ -113,8 +166,8 @@ const Index = () => {
     setIsScanning(false);
     
     toast({
-      title: "Scan Complete",
-      description: `Scanned ${mockTotalPages} pages and found ${brokenLinks.length + 5} broken links out of ${mockTotalLinks} total links`,
+      title: "Comprehensive Scan Complete",
+      description: `Scanned ${mockTotalApps} apps across ${mockTotalPages} pages and found ${brokenLinks.length + 8} broken links out of ${mockTotalLinks} total links`,
     });
   };
 
@@ -137,10 +190,10 @@ const Index = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            HubSpot Setup Guide Link Checker
+            HubSpot Marketplace Link Checker
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Scan all pages of the HubSpot marketplace to find broken Setup guide links and ensure a smooth user experience
+            Comprehensive scan of all links across 1500+ HubSpot marketplace apps including setup guides, documentation, support, pricing, and more
           </p>
         </div>
 
@@ -166,13 +219,15 @@ const Index = () => {
             
             {isScanning && (
               <div className="space-y-3">
-                <div className="flex justify-between text-sm text-gray-600">
-                  <span>Scanning page {currentPage} of {totalPages}...</span>
-                  <span>{scannedLinks} / {totalLinks} links checked</span>
+                <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
+                  <div>Page {currentPage} of {totalPages}</div>
+                  <div>Apps: {scannedApps} / {totalApps}</div>
+                  <div>Links: {scannedLinks} / {totalLinks}</div>
+                  <div>Broken: {brokenLinks.length}</div>
                 </div>
                 <Progress value={progress} className="w-full" />
                 <div className="text-center text-sm text-gray-500">
-                  Paginating through all marketplace pages to find broken setup guide links
+                  Checking all links across marketplace apps: setup guides, documentation, support, pricing, privacy policies, terms, demos, and websites
                 </div>
               </div>
             )}
@@ -183,7 +238,7 @@ const Index = () => {
               className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-8 py-2"
             >
               <Search className="w-4 h-4 mr-2" />
-              {isScanning ? "Scanning All Pages..." : "Start Full Marketplace Scan"}
+              {isScanning ? "Scanning All Apps..." : "Start Comprehensive Marketplace Scan"}
             </Button>
           </form>
         </Card>
@@ -191,10 +246,14 @@ const Index = () => {
         {/* Results Summary */}
         {(totalLinks > 0 || brokenLinks.length > 0) && (
           <div className="max-w-4xl mx-auto mb-8">
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
               <Card className="p-4 text-center">
                 <div className="text-2xl font-bold text-blue-600">{totalPages}</div>
-                <div className="text-gray-600">Pages Scanned</div>
+                <div className="text-gray-600">Pages</div>
+              </Card>
+              <Card className="p-4 text-center">
+                <div className="text-2xl font-bold text-blue-600">{totalApps}</div>
+                <div className="text-gray-600">Apps</div>
               </Card>
               <Card className="p-4 text-center">
                 <div className="text-2xl font-bold text-blue-600">{totalLinks}</div>
@@ -202,11 +261,11 @@ const Index = () => {
               </Card>
               <Card className="p-4 text-center">
                 <div className="text-2xl font-bold text-green-600">{totalLinks - brokenLinks.length}</div>
-                <div className="text-gray-600">Working Links</div>
+                <div className="text-gray-600">Working</div>
               </Card>
               <Card className="p-4 text-center">
                 <div className="text-2xl font-bold text-red-600">{brokenLinks.length}</div>
-                <div className="text-gray-600">Broken Links</div>
+                <div className="text-gray-600">Broken</div>
               </Card>
             </div>
           </div>
@@ -217,7 +276,7 @@ const Index = () => {
           <Card className="max-w-4xl mx-auto p-6 shadow-lg">
             <div className="flex items-center gap-2 mb-6">
               <AlertCircle className="w-5 h-5 text-red-500" />
-              <h2 className="text-2xl font-bold text-gray-900">Broken Setup Guide Links</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Broken Links Found</h2>
             </div>
             
             <div className="space-y-4">
@@ -225,9 +284,12 @@ const Index = () => {
                 <div key={index} className="border border-red-200 rounded-lg p-4 bg-red-50">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
                     <h3 className="font-semibold text-gray-900">{link.appName}</h3>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap">
                       <Badge variant="outline" className="w-fit">
                         Page {link.pageNumber}
+                      </Badge>
+                      <Badge variant="secondary" className="w-fit">
+                        {link.linkType}
                       </Badge>
                       <Badge variant="destructive" className="w-fit">
                         {link.status} - {link.error}
@@ -257,7 +319,7 @@ const Index = () => {
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-gray-900 mb-2">All Links Working!</h2>
             <p className="text-gray-600">
-              Great news! All {totalLinks} Setup guide links across {totalPages} pages are working properly.
+              Excellent! All {totalLinks} links across {totalApps} apps on {totalPages} pages are working properly.
             </p>
           </Card>
         )}
